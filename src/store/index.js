@@ -10,7 +10,8 @@ const rootReducer = combineReducers({
   user: userReducer
 })
 
-const persistConfig = { /* 리덕스store안에 있는 데이터를 로컬스토리지나 세션스토리지 어디에 저장을 할건지 */
+const persistConfig = { 
+/* 리덕스store안에 있는 데이터를 로컬스토리지나 세션스토리지 어디에 저장을 할건지 */
   key: 'root',
   storage
 }
