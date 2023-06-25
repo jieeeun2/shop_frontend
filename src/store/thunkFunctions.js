@@ -16,12 +16,37 @@ export const registerUser = createAsyncThunk(
 )
 
 export const loginUser = createAsyncThunk(
-  'user/loginUser', async(body, thunkAPI) => {
+  'user/loginUser', async (body, thunkAPI) => {
     try {
-      const response = axiosInstance.post('/users/login', body)
+      const response = await axiosInstance.post('/users/login', body)
+      /* 아니 slice에 action.payload가 왜 계속 undefined뜨는거지 
+      redux devtools에서는 Promise pending상태여서 왜지 했는데
+      await안붙여준거였음;;*/
       return response.data 
     }catch(error) {
       return thunkAPI.rejectWithValue(error.response.data || error.message)
     } 
   }
 ) 
+
+export const authUser = createAsyncThunk(
+  'user/authUser', async (_, thunkAPI) => {
+    try {
+      const response = await axiosInstance.get('/users/auth')
+      return response.data 
+    }catch(error) {
+      return thunkAPI.rejectWithValue(error.response.data || error.message)
+    }
+  }
+)
+
+export const logoutUser = createAsyncThunk(
+  'user/logoutUser', async (_, thunkAPI) => {
+    try {
+      const response = await axiosInstance.post('/users/logout')
+      return response.data
+    }catch(error) {
+      return thunkAPI.rejectWithValue(error.response.data || error.message)
+    }
+  }
+)
