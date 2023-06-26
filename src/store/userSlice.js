@@ -21,6 +21,26 @@ const userSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+      .addCase(authUser.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(authUser.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.userData = action.payload 
+        //이게 왜필요한거지 이미 로그인했을때 state값 들어있지않나????? -> 그런식으로 보면 안됨
+        //이게 없으면 state를 보면 user>userData>user>여기안에다가 payload가 들어감 
+        //백엔드에서는 페이로드가 전해져오는데 넣을위치를 못찾아서 그런가 왜 에러도 안나고 아무데나 들어가고 난리임?????
+        state.isAuth = true //이거 사실 여기서 왜 또 해줘야하는지 잘 모르겟음
+        //로그인할때 이미 isAuth true로 줘서 필요없는거 아닌가 고새 isAuth가 false로 바뀔 일이 있나????
+      })
+      .addCase(authUser.rejected, (state, action) => {
+        state.isLoading = false
+        state.error = action.payload
+        state.userData = initialState.userData
+        state.isAuth = false
+        localStorage.removeItem('accessToken')
+      })
+
       .addCase(registerUser.pending, (state) => {
         state.isLoading = true
       })
@@ -47,22 +67,6 @@ const userSlice = createSlice({
         state.isLoading = false
         state.error = action.payload
         toast.error(action.payload)
-      })
-
-      .addCase(authUser.pending, (state) => {
-        state.isLoading = true
-      })
-      .addCase(authUser.fulfilled, (state, action) => {
-        state.isLoading = false
-        // state.userData = action.payload //이게 왜필요한거지 이미 로그인했을때 state값 들어있지않나?????
-        // state.isAuth = true //이것도왜지
-      })
-      .addCase(authUser.rejected, (state, action) => {
-        state.isLoading = false
-        state.error = action.payload
-        state.userData = initialState.userData
-        state.isAuth = false
-        localStorage.removeItem('accessToken')
       })
 
       .addCase(logoutUser.pending, (state) => {
