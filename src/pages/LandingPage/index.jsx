@@ -9,11 +9,12 @@ import { continents, prices } from '../../utils/filterData'
 
 const LandingPage = () => {
   const [products, setProducts] = useState([])
+  const [skip, setSkip] = useState(0) //어디서부터 데이터를 가져오는지에 대한 위치
   const limit = 4  
   //처음 데이터를 가져올때와 더보기버튼을 눌러서 가져올때, 얼마나 많은 데이터를 한번에 가져오는지
-  const [skip, setSkip] = useState(0) //어디서부터 데이터를 가져오는지에 대한 위치
   const [hasMore, setHasMore] = useState(false)
   const [filters, setFilters] = useState({continents: [], price: []})
+  const [searchTerm, setSearchTerm] = useState('')
 
   useEffect(() => {
     fetchProducts({skip, limit}) 
@@ -29,7 +30,7 @@ const LandingPage = () => {
   */
   const fetchProducts = async ({skip, limit, loadMore=false, filters={}, searchTerm=''}) => {
     const params = {skip, limit, filters, searchTerm}
-    
+
     try {
       const response = await axiosInstance.get('/products', {params})
 
@@ -51,7 +52,8 @@ const LandingPage = () => {
       skip: skip + limit,
       limit,
       loadMore: true,
-      filters
+      filters,
+      searchTerm
     }
     fetchProducts(body)
     setSkip(skip + limit)
@@ -60,7 +62,7 @@ const LandingPage = () => {
   const handleFilters = (newFilterdData, category) => {
     const newFilters = {...filters}
     newFilters[category] = newFilterdData
-    if(category === 'prices') {
+    if(category === 'price') {
       const priceValues = handlePrice(newFilterdData)
       newFilters[category] = priceValues
     }
@@ -72,7 +74,8 @@ const LandingPage = () => {
     const body = {
       skip: 0,
       limit,
-      filters
+      filters,
+      searchTerm
     }
     fetchProducts(body)
     setSkip(0) //왜해줘야하지
@@ -88,6 +91,18 @@ const LandingPage = () => {
     return array
   }
 
+  const handleSearchTerm = (event) => {
+    const body = {
+      skip: 0,
+      limit,
+      filters,
+      searchTerm: event.target.value
+    }
+    setSkip(0)
+    setSearchTerm(event.target.value)
+    fetchProducts(body)
+  }
+
   return (
     <section>
       <div className='text-center m-7'>
@@ -101,12 +116,12 @@ const LandingPage = () => {
           </div>
           <div className='w-1/2'>
             <RadioBox prices={prices} checkedPrice={filters.price}
-              onFilters={filters => handleFilters(filters, 'prices')}/>
+              onFilters={filters => handleFilters(filters, 'price')}/>
           </div>
         </div>
 
-        <div className='flex justify-end'>
-          <SearchInput />
+        <div className='flex justify-end mb-3'>
+          <SearchInput searchTerm={searchTerm} onSearch={handleSearchTerm}/>
         </div>
 
         <div className='grid grid-cols-2 gap-4 sm:grid-cols-4'>

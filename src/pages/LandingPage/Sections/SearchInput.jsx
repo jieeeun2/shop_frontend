@@ -1,8 +1,10 @@
-import React from 'react'
-
-const SearchInput = () => {
+const SearchInput = ({searchTerm, onSearch}) => {
   return (
-    <div>SearchInput</div>
+    <input type='text'
+      className='p-2 border border-gray-300 rounded-md' 
+      placeholder='검색하세요'
+      onChange={onSearch}
+      value={searchTerm}/>
   )
 }
 
