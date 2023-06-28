@@ -7,7 +7,7 @@ const routes = [
   {to: '/login', name: '로그인', auth: false},
   {to: '/register', name: '회원가입', auth: false},
   {to: '/products/upload', name: '업로드', auth: true},
-  {to: '/user/cart', name: '장바구니', auth: true, icon: <AiOutlineShoppingCart style={{fontSize: '1.4rem'}}/> },
+  {to: '/users/cart', name: '장바구니', auth: true, icon: <AiOutlineShoppingCart style={{fontSize: '1.4rem'}}/> },
 
   {to: '', name: '로그아웃', auth: true},
   {to: '/history', name: '주문목록', auth: true},

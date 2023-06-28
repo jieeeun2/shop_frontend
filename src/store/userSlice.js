@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { registerUser, loginUser, authUser, logoutUser} from './thunkFunctions'
+import { registerUser, loginUser, authUser, logoutUser, addToCart} from './thunkFunctions'
 import { toast } from 'react-toastify'
 
 const initialState = {
@@ -83,6 +83,20 @@ const userSlice = createSlice({
         state.error = action.payload
         toast.error(action.payload)
       })
+
+      .addCase(addToCart.pending, (state) => {
+        state.isLoading = true
+      }) 
+      .addCase(addToCart.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.userData.cart = action.payload
+        toast.info('장바구니에 추가되었습니다.')
+      }) 
+      .addCase(addToCart.rejected, (state, action) => {
+        state.isLoading = false
+        state.error = action.payload
+        toast.error(action.payload)
+      }) 
 
   }
 })

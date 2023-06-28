@@ -53,7 +53,7 @@ function App() {
           <Route path='/protected' element={<ProtectedPage />} />
           <Route path='/products/upload' element={<UploadProductPage />} />
           <Route path='/products/:productId' element={<DetailProductPage />} />
-          <Route path='/user/cart' element={<CartPage />} />
+          <Route path='/users/cart' element={<CartPage />} />
           <Route path='/history' element={<HistoryPage />} />
         </Route>
 

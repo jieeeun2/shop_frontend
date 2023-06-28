@@ -11,11 +11,10 @@ const DetailProductPage = () => {
   const [product, setProduct] = useState(null)
 
   useEffect(() => {
-    {console.log('뭐가 찍힐까나 u', product)}
+    //console.log('뭐가 찍힐까나 3', product)
     const fetchProduct = async () => {
       try {
         const response = await axiosInstance.get(`/products/${productId}?type=single`)
-        console.log(response);
         setProduct(response.data[0])
       }catch(error) {
         console.log(error)
@@ -24,7 +23,7 @@ const DetailProductPage = () => {
     fetchProduct()
   }, [productId])
 
-  {console.log('뭐가 찍힐까나 i', product)}
+  //console.log('뭐가 찍힐까나 1', product)
   if(!product) return null
 
   return (
@@ -32,7 +31,7 @@ const DetailProductPage = () => {
       <div className='text-center'>
         <h1 className='p-4 text-2xl'>{product.title}</h1>
       </div>
-      {console.log('뭐가 찍힐까나', product)}
+      {/* {console.log('뭐가 찍힐까나 2', product)} */}
       <div className='flex gap-2'>
         <div className='w-1/2'>
           <ProductImage product={product} />
