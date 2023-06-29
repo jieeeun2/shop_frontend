@@ -75,7 +75,29 @@ export const getCartItems = createAsyncThunk(
             response.data[index].quantity = cartItem.quantity
           }
         })
-    })
+      })
+
+      return response.data
+    }catch(error) {
+      return thunkAPI.rejectWithValue(error.response.data || error.message)
+    }
+  }
+)
+
+
+export const removeCartItem = createAsyncThunk(
+  '/user/removeCartItem', async (productId, thunkAPI) => {
+    try {
+      const response = await axiosInstance.delete(`/users/cart?productId=${productId}`)
+      
+      //response에 담겨온 product, cart 정보를 조합해서 cartDetail을 만듬
+      response.data.cart.forEach(item => {
+        response.data.productInfo.forEach((product, index) => {
+          if(item.id === product._id) {
+            response.data.productInfo[index].quantity = item.quantity
+          }
+        })
+      })
 
       return response.data
     }catch(error) {

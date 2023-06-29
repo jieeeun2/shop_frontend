@@ -3,6 +3,7 @@ import { addToCart } from './../../../store/thunkFunctions';
 
 const ProductInfo = ({product}) => {
   const dispatch = useDispatch()
+  
   const handleClick = () => {
     dispatch(addToCart({productId: product._id}))
   }
