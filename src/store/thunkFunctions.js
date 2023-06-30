@@ -53,7 +53,7 @@ export const logoutUser = createAsyncThunk(
 
 
 export const addToCart = createAsyncThunk(
-  '/user/addToCart', async (body, thunkAPI) => {
+  'user/addToCart', async (body, thunkAPI) => {
     try {
       const response = await axiosInstance.post('/users/cart', body) 
       return response.data
@@ -65,13 +65,19 @@ export const addToCart = createAsyncThunk(
 
 
 export const getCartItems = createAsyncThunk(
-  '/user/getCartItems', async ({cartItemIds, userCart}, thunkAPI) => {
+  'user/getCartItems', async ({cartItemIds, userCart}, thunkAPI) => {
+    /* 화면에 장바구니페이지 뿌려주려면 Product Collection을 가져와야하는데
+    state.userData.cart에만 quantity값이 있는데 이것도 같이 뿌려줘야함
+    그래서 해당하는 Product document를 가져오고 거기에 추가로 quantity속성도 추가한거를
+    state에서 관리할껀데 새롭게 state.userData.cartDetail을 만들꺼니깐
+    thunk함수 안에서 할꺼는 Product Collection을 가져와서 quantity속성 추가한거를 리턴하면 됨
+     */
     try{
       const response = await axiosInstance.get(`/products/${cartItemIds}?type=array`)
 
       userCart.forEach(cartItem => {
         response.data.forEach((productDetail, index) => {
-          if(cartItem.id === productDetail._id){
+          if(productDetail._id === cartItem.id) {
             response.data[index].quantity = cartItem.quantity
           }
         })
@@ -86,19 +92,30 @@ export const getCartItems = createAsyncThunk(
 
 
 export const removeCartItem = createAsyncThunk(
-  '/user/removeCartItem', async (productId, thunkAPI) => {
+  'user/removeCartItem', async (productId, thunkAPI) => {
     try {
       const response = await axiosInstance.delete(`/users/cart?productId=${productId}`)
       
-      //response에 담겨온 product, cart 정보를 조합해서 cartDetail을 만듬
       response.data.cart.forEach(item => {
         response.data.productInfo.forEach((product, index) => {
-          if(item.id === product._id) {
+          if(product._id === item.id) {
             response.data.productInfo[index].quantity = item.quantity
           }
         })
       })
 
+      return response.data
+    }catch(error) {
+      return thunkAPI.rejectWithValue(error.response.data || error.message)
+    }
+  }
+)
+
+
+export const payProducts = createAsyncThunk(
+  'user/payProducts', async (body, thunkAPI) => {
+    try {
+      const response = await axiosInstance.post(`/users/payment`, body)
       return response.data
     }catch(error) {
       return thunkAPI.rejectWithValue(error.response.data || error.message)

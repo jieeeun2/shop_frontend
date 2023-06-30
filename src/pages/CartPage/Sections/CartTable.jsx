@@ -1,5 +1,3 @@
-import React from 'react'
-
 const CartTable = ({products, onRemoveItem}) => {
 
   const renderCartImage = (images) => {

@@ -7,7 +7,7 @@ const ProductImage = ({product}) => {
   useEffect(() => {
     // console.log('어떤거부터 찍히는걸까 2')
     if(product?.images?.length > 0) {
-      let images = [];
+      let images = []
       product.images.map(imageName => {
         return images.push({
           original: `${import.meta.env.VITE_SERVER_URL}/${imageName}`,

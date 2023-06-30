@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { getCartItems, removeCartItem } from './../../store/thunkFunctions';
+import { getCartItems, payProducts, removeCartItem } from './../../store/thunkFunctions';
 import CartTable from "./Sections/CartTable";
 
 //장바구니 페이지
@@ -16,23 +16,33 @@ const CartPage = () => {
       userData.cart.forEach(item => {
         cartItemIds.push(item.id)
       })
-      const body = {cartItemIds, userCart: userData.cart} //왜 이렇게 가져오는거지?
+      const body = {cartItemIds, userCart: userData.cart} 
+
+      /* Product collection에서 해당 Product document를 가져오기 위한 cartItemIds와
+      quantity속성을 가져오기 위한 userCart를 body에 담아 보냄 */
       dispatch(getCartItems(body))
     }
   }, [dispatch, userData])
   
   useEffect(() => {
+    console.log('cartDetail: ', cartDetail)
     calculateTotal(cartDetail)
   }, [cartDetail])
+  /* cartDetail이 변경되었을때 실행되는건데,
+  왜 계속 state에 cartDetail들어가기 전일때 이게 실행이 되는거지????? */
 
   const calculateTotal = (cartItems) => {
-    let total = 0
+    let total = 0;
     cartItems.map(item => total += item.price * item.quantity)
     setTotal(total)
   }
 
   const handleRemoveCartItem = (productId) => {
     dispatch(removeCartItem(productId))
+  }
+  
+  const handlePaymentClick = () => {
+    dispatch(payProducts({cartDetail}))
   }
 
   return (
@@ -45,7 +55,8 @@ const CartPage = () => {
           <CartTable products={cartDetail} onRemoveItem={handleRemoveCartItem}/>
           <div className='mt-10'>
             <p><span className='font-bold'>합계: </span>{total}원</p>
-            <button className='text-white bg-black rounded-md hover:bg-gray-500 px-4 py-2 mt-5'>
+            <button className='text-white bg-black rounded-md hover:bg-gray-500 px-4 py-2 mt-5'
+              onClick={handlePaymentClick}>
               결제하기
             </button>
           </div>

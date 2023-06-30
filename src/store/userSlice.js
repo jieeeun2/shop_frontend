@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { registerUser, loginUser, authUser, logoutUser, addToCart, getCartItems, removeCartItem} 
-  from './thunkFunctions'
+import { registerUser, loginUser, authUser, logoutUser, addToCart, getCartItems, 
+  removeCartItem, payProducts} from './thunkFunctions'
 import { toast } from 'react-toastify'
 
 const initialState = {
@@ -104,7 +104,8 @@ const userSlice = createSlice({
       })
       .addCase(getCartItems.fulfilled, (state, action) => {
         state.isLoading = false
-        state.cartDetail = action.payload
+        state.cartDetail = action.payload 
+        //action.payload에 담겨져 있는거는 Product collection에다가 quantity속성 추가한거임
       })
       .addCase(getCartItems.rejected, (state, action) => {
         state.isLoading = false
@@ -117,11 +118,28 @@ const userSlice = createSlice({
       })
       .addCase(removeCartItem.fulfilled, (state, action) => {
         state.isLoading = false
-        state.cartDetail = action.payload
+        state.userData.cart = action.payload.cart
+        state.cartDetail = action.payload.productInfo
+        toast.info('상품이 장바구니에서 삭제되었습니다.')
       })
       .addCase(removeCartItem.rejected, (state, action) => {
         state.isLoading = false
         state.error = action.payload
+        toast.error(action.payload)
+      })
+
+      .addCase(payProducts.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(payProducts.fulfilled, (state) => {
+        state.isLoading = false
+        state.userData.cart = []
+        state.cartDetail = []
+        toast.info('성공적으로 상품을 구매했습니다')
+      })
+      .addCase(payProducts.rejected, (state, action) => {
+        state.isLoading = false
+        state.error = action.error
         toast.error(action.payload)
       })
 
