@@ -7,7 +7,7 @@ const ImageSlider = ({images}) => {
       <Carousel autoPlay showThumbs={false} infiniteSpeed>
         {images.map(image => (
           <div key={image}>
-            <img src={`${import.meta.env.VITE_SERVER_URL}/${image}`} 
+            <img src={`${import.meta.env.VITE_BASE_URL}/${image}`} 
               alt={image} className='w-full max-h-[150px]'/>
           </div>
         ))}

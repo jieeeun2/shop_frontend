@@ -46,7 +46,7 @@ const FileUpload = ({onImageChange, images}) => {
         {images.map(image => (
           <div key={image} onClick={() => handleDelete(image)}>
             <img className='min-w-[300px] h-[300px]' 
-              src={`${import.meta.env.VITE_SERVER_URL}/${image}`} alt={image}/>
+              src={`${import.meta.env.VITE_BASE_URL}/${image}`} alt={image}/>
               {/* 백엔드서버의 url을 넣는거. frontend/.env 파일 생성해서 환경변수로 지정해놓기 */}
           </div>
         ))}
